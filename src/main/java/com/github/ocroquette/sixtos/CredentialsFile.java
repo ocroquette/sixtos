@@ -34,6 +34,10 @@ public class CredentialsFile {
         return credentialsFile;
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
     public void addUser(String username, String password) throws IllegalOperation, IOException {
         addUser(username, password, new ArrayList<String>());
     }

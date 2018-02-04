@@ -12,8 +12,8 @@ public class SixtosAuthenticator implements Authenticator<BasicCredentials, Sixt
 
     private final CredentialsFile credentialsFile;
 
-    public SixtosAuthenticator(File credendialFile) {
-        credentialsFile = new CredentialsFile(new File("credentials"));
+    public SixtosAuthenticator(File credentialsFile) {
+        this.credentialsFile = new CredentialsFile(credentialsFile);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class SixtosAuthenticator implements Authenticator<BasicCredentials, Sixt
         String username = credentials.getUsername();
         String password = credentials.getPassword();
         try {
-            if (credentialsFile.validateCredentials(credentials.getUsername(), credentials.getPassword()))
-                return Optional.of(new SixtosPrincipal(credentials.getUsername()));
+            if (credentialsFile.validateCredentials(username, password))
+                return Optional.of(new SixtosPrincipal(username));
             if (!credentialsFile.containsUser(username)) {
                 System.err.println("Unknown user: " + username);
             } else {
