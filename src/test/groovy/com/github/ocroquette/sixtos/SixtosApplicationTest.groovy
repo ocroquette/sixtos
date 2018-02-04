@@ -37,6 +37,8 @@ class SixtosApplicationTest extends Specification {
 uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f551:UPLOADER
 """
         new File(storageRoot, "preexistingfile").text = "Hello"
+        new File(storageRoot, "preexistingdir").mkdirs()
+        new File(storageRoot, "preexistingdir/fileinsubdir").text = "fileinsubdir"
 
         dropWizardTestSupport = new DropwizardTestSupport<SixtosConfiguration>(SixtosApplication.class,
                 ResourceHelpers.resourceFilePath("config.yml"),
@@ -53,13 +55,13 @@ uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f55
         temporaryFolder.delete()
     }
 
-    def "Anonymous GET"() {
+    def "Anonymous file GET"() {
         given:
         Client client = new JerseyClientBuilder().build();
 
         when:
         Response response = client.target(
-                String.format("http://localhost:%d/x", dropWizardTestSupport.getLocalPort()))
+                String.format("http://localhost:%d/preexistingfile", dropWizardTestSupport.getLocalPort()))
                 .request()
                 .get();
 
@@ -67,7 +69,7 @@ uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f55
         response.getStatus() == 401
     }
 
-    def "Authorized GET"() {
+    def "Authorized file GET"() {
         given:
         HttpAuthenticationFeature auth = HttpAuthenticationFeature.basic("fetcher", "x");
         Client client = new JerseyClientBuilder().register(auth).build()
@@ -82,6 +84,37 @@ uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f55
         response.getStatus() == 200
         response.readEntity(String.class) == "Hello"
     }
+
+    def "Anonymous list GET"() {
+        given:
+        Client client = new JerseyClientBuilder().build();
+
+        when:
+        Response response = client.target(
+                String.format("http://localhost:%d/", dropWizardTestSupport.getLocalPort()))
+                .request()
+                .get();
+
+        then:
+        response.getStatus() == 401
+    }
+
+    def "Authorized list GET"() {
+        given:
+        HttpAuthenticationFeature auth = HttpAuthenticationFeature.basic("fetcher", "x");
+        Client client = new JerseyClientBuilder().register(auth).build()
+
+        when:
+        Response response = client.target(
+                String.format("http://localhost:%d/", dropWizardTestSupport.getLocalPort()))
+                .request()
+                .get()
+
+        then:
+        response.getStatus() == 200
+        response.readEntity(String.class) == "preexistingdir/fileinsubdir\npreexistingfile"
+    }
+
 
     def "Anonymous PUT"() {
         given:

@@ -32,7 +32,7 @@ public class SixtosApplication extends Application<SixtosConfiguration> {
                     final Environment environment) {
 
         environment.jersey().register(new FileResource(new File(configuration.getStorageRoot())));
-        environment.jersey().register(new HomeResource());
+        environment.jersey().register(new HomeResource(new File(configuration.getStorageRoot())));
 
         SixtosAuthenticator sixtosAuthenticator = new SixtosAuthenticator(new File(configuration.getCredentialsFile()));
 
