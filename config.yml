@@ -11,3 +11,4 @@ server:
     - type: http
       port: 8091
       bindHost: 127.0.0.1
+storageRoot: storageRoot/

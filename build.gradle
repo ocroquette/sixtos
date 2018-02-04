@@ -37,7 +37,7 @@ shadowJar {
 
 jar {
     manifest {
-        attributes "Main-Class": "com.github.ocroquette.sixtos.core.SixtosApplication"
+        attributes "Main-Class": "com.github.ocroquette.sixtos.SixtosApplication"
     }
 }
 

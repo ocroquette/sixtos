@@ -1,4 +1,4 @@
-package com.github.ocroquette.sixtos.core;
+package com.github.ocroquette.sixtos;
 
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.Authorizer;

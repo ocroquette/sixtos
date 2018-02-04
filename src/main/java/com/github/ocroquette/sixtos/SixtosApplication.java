@@ -1,4 +1,4 @@
-package com.github.ocroquette.sixtos.core;
+package com.github.ocroquette.sixtos;
 
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -31,7 +31,7 @@ public class SixtosApplication extends Application<SixtosConfiguration> {
     public void run(final SixtosConfiguration configuration,
                     final Environment environment) {
 
-        environment.jersey().register(new FileResource());
+        environment.jersey().register(new FileResource(new File(configuration.getStorageRoot())));
         environment.jersey().register(new HomeResource());
 
         File credentialsFile = new File("credentials");

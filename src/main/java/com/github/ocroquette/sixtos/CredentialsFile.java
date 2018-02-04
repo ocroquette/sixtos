@@ -1,4 +1,4 @@
-package com.github.ocroquette.sixtos.core;
+package com.github.ocroquette.sixtos;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

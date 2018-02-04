@@ -1,6 +1,6 @@
 package com.github.ocroquette.sixtos.core
 
-import com.github.ocroquette.sixtos.core.CredentialsFile
+import com.github.ocroquette.sixtos.CredentialsFile
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification

@@ -87,4 +87,8 @@ gradle-app.setting
 
 
 credentials
+.idea
+*.iml
+storageRoot/
+
 
