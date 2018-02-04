@@ -34,13 +34,12 @@ public class SixtosApplication extends Application<SixtosConfiguration> {
         environment.jersey().register(new FileResource(new File(configuration.getStorageRoot())));
         environment.jersey().register(new HomeResource());
 
-        File credentialsFile = new File("credentials");
-        SixtosAuthenticator sifisAuthenticator = new SixtosAuthenticator(credentialsFile);
+        SixtosAuthenticator sixtosAuthenticator = new SixtosAuthenticator(new File(configuration.getCredentialsFile()));
 
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<SixtosPrincipal>()
-                        .setAuthenticator(sifisAuthenticator)
-                        .setAuthorizer(sifisAuthenticator)
+                        .setAuthenticator(sixtosAuthenticator)
+                        .setAuthorizer(sixtosAuthenticator)
                         .setRealm(getName())
                         .buildAuthFilter()));
 

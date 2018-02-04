@@ -8,6 +8,9 @@ public class SixtosConfiguration extends Configuration {
     @NotEmpty
     private String storageRoot;
 
+    @NotEmpty
+    private String credentialsFile;
+
     @JsonProperty
     public String getStorageRoot() {
         return storageRoot;
@@ -16,5 +19,15 @@ public class SixtosConfiguration extends Configuration {
     @JsonProperty
     public void setStorageRoot(String storageRoot) {
         this.storageRoot = storageRoot;
+    }
+
+    @JsonProperty
+    public String getCredentialsFile() {
+        return credentialsFile;
+    }
+
+    @JsonProperty
+    public void setCredentialsFile(String credentialsFile) {
+        this.credentialsFile = credentialsFile;
     }
 }
