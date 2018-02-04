@@ -4,6 +4,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CredentialsFile {
     private final File file;
@@ -13,6 +15,8 @@ public class CredentialsFile {
 
     // Length of the hashes with salt in chars
     private static final int SALT_HASH_LENGTH = 72;
+
+    private static Logger log = Logger.getLogger(CredentialsFile.class.getName());
 
     static class IllegalOperation extends Exception {
         public IllegalOperation(String msg) {
@@ -72,8 +76,8 @@ public class CredentialsFile {
         String salt;
         try {
             salt = extractSalt(saltedHash);
-        } catch (IllegalOperation illegalOperation) {
-            // TODO logging
+        } catch (IllegalOperation e) {
+            log.log(Level.SEVERE, e.getMessage(), e);
             return false;
         }
         return generateSaltedHash(password, salt).equals(userData.saltedHash);
@@ -138,8 +142,10 @@ public class CredentialsFile {
     private static Map<String, UserData> parse(File file) throws IOException {
         TreeMap<String, UserData> userMap = new TreeMap<>();
 
-        if ( ! file.exists() )
+        if ( ! file.canRead() ) {
+            log.severe("Credential file is not readable: " + file.getCanonicalPath());
             return userMap;
+        }
 
         BufferedReader reader = null;
         try {

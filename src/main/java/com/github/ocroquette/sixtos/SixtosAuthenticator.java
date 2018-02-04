@@ -7,6 +7,8 @@ import io.dropwizard.auth.basic.BasicCredentials;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SixtosAuthenticator implements Authenticator<BasicCredentials, SixtosPrincipal>, Authorizer<SixtosPrincipal> {
 
@@ -16,6 +18,8 @@ public class SixtosAuthenticator implements Authenticator<BasicCredentials, Sixt
         this.credentialsFile = new CredentialsFile(credentialsFile);
     }
 
+    private Logger log = Logger.getLogger(this.getClass().getName());
+
     @Override
     public Optional<SixtosPrincipal> authenticate(BasicCredentials credentials) {
         String username = credentials.getUsername();
@@ -24,13 +28,12 @@ public class SixtosAuthenticator implements Authenticator<BasicCredentials, Sixt
             if (credentialsFile.validateCredentials(username, password))
                 return Optional.of(new SixtosPrincipal(username));
             if (!credentialsFile.containsUser(username)) {
-                System.err.println("Unknown user: " + username);
+                log.info("Unknown user: " + username);
             } else {
-                System.err.println("Invalid password provided for: " + username);
+                log.info("Invalid password provided for: " + username);
             }
         } catch (IOException e) {
-            // TODO logging
-            e.printStackTrace(System.err);
+            log.log(Level.SEVERE, e.getMessage(), e);
         }
         return Optional.empty();
     }
@@ -40,8 +43,7 @@ public class SixtosAuthenticator implements Authenticator<BasicCredentials, Sixt
         try {
             return credentialsFile.getRoles(principal.getName()).contains(role);
         } catch (IOException e) {
-            // TODO logging
-            e.printStackTrace(System.err);
+            log.log(Level.SEVERE, e.getMessage(), e);
             return false;
         }
     }
