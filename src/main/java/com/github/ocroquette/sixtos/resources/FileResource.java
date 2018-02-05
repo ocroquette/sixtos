@@ -7,12 +7,15 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.logging.Logger;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_OCTET_STREAM)
 public class FileResource {
 
     private final File storageRoot;
+
+    private Logger log = Logger.getLogger(this.getClass().getName());
 
     public FileResource(File storageRoot) {
         this.storageRoot = storageRoot;
@@ -66,7 +69,7 @@ public class FileResource {
         }
     }
 
-    private static long receive(InputStream from, File file) throws IOException {
+    private long receive(InputStream from, File file) throws IOException {
         long total = 0;
         FileOutputStream out = null;
 
@@ -87,6 +90,9 @@ public class FileResource {
         } finally {
             if (out != null)
                 out.close();
+            if ( file.exists() && ! file.delete()) {
+                log.severe("Unable to delete partial file: " + file.getCanonicalPath());
+            }
         }
 
         return total;
