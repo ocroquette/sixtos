@@ -75,7 +75,7 @@ public class FileResource {
             if ( ! file.getParentFile().isDirectory() )
                 throw new IOException("Failed to create parent directory: " + file.getParentFile().getCanonicalPath());
             out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[1024 * 1024];
             while (true) {
                 int r = from.read(buf);
                 if (r == -1) {
