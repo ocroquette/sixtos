@@ -33,8 +33,8 @@ class SixtosApplicationTest extends Specification {
         credentials = temporaryFolder.newFile("credentials")
 
         // All passwords are "x"
-        credentials.text = """fetcher:9454df8ba63d4b5ea623ae182a133609b5f81b468a7ca4c6aa750333fc99bb721b9d9f18:FETCHER
-uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f551:UPLOADER
+        credentials.text = """fetcher:9454df8ba63d4b5ea623ae182a133609b5f81b468a7ca4c6aa750333fc99bb721b9d9f18:GET
+uploader:46ea7073d52945728c79b8df7f3deea4b80c0cc4146c38a0bcd1c50989749541b743f551:PUT
 """
         new File(storageRoot, "preexistingfile").text = "Hello"
         new File(storageRoot, "preexistingdir").mkdirs()

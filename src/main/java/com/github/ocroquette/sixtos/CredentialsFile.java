@@ -178,7 +178,12 @@ public class CredentialsFile {
             System.exit(1);
         }
 
-        CredentialsFile credentialsFile = new CredentialsFile(new File(args[0]));
+        File file = new File(args[0]);
+
+        if ( ! file.exists() )
+            file.createNewFile();
+
+        CredentialsFile credentialsFile = new CredentialsFile(file);
 
         System.out.print("Password: ");
         String password1 = new String(System.console().readPassword());

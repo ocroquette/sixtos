@@ -24,7 +24,7 @@ public class HomeResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Timed
-    @RolesAllowed("FETCHER")
+    @RolesAllowed("GET")
     public Response get() {
         try {
             String listing = Files.walk(storageRoot.toPath())

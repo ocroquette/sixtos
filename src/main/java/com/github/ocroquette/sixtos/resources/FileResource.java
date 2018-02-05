@@ -24,8 +24,8 @@ public class FileResource {
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Timed
-    @Path("{relativePath : .+}")
-    @RolesAllowed("FETCHER")
+    @Path("{relativePath : .+}") // The regular expression allows paths containing slashes
+    @RolesAllowed("GET")
     public Response get(@PathParam("relativePath") String path) {
         File file = new File(storageRoot, path);
 
@@ -43,8 +43,8 @@ public class FileResource {
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("{relativePath  : .+}")
-    @RolesAllowed("UPLOADER")
+    @Path("{relativePath  : .+}") // The regular expression allows paths containing slashes
+    @RolesAllowed("PUT")
     public Response put(@PathParam("relativePath") String path, InputStream inputStream) {
         File file = new File(storageRoot, path);
 
@@ -73,9 +73,11 @@ public class FileResource {
         long total = 0;
         FileOutputStream out = null;
 
+        IOException exception = null;
+
         try {
             file.getParentFile().mkdirs();
-            if ( ! file.getParentFile().isDirectory() )
+            if (!file.getParentFile().isDirectory())
                 throw new IOException("Failed to create parent directory: " + file.getParentFile().getCanonicalPath());
             out = new FileOutputStream(file);
             byte[] buf = new byte[1024 * 1024];
@@ -87,14 +89,19 @@ public class FileResource {
                 out.write(buf, 0, r);
                 total += r;
             }
+        } catch (IOException ex) {
+            exception = ex;
         } finally {
             if (out != null)
                 out.close();
-            if ( file.exists() && ! file.delete()) {
-                log.severe("Unable to delete partial file: " + file.getCanonicalPath());
-            }
         }
 
+        if (exception != null) {
+            if (file.exists() && !file.delete()) {
+                log.severe("Unable to delete partial file: " + file.getCanonicalPath());
+            }
+            throw exception;
+        }
         return total;
     }
 }
